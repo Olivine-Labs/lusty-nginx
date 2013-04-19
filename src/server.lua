@@ -1,10 +1,9 @@
 local server = { }
 
 local function getRequest()
-  local request = require 'server.request'
-  request.url = ngx.var.uri
-
-  request = setmetatable(request, {
+  local request = setmetatable({
+    url = ngx.var.uri
+  },{
     -- lazy-load all of the ngx data requests so we only call out to ngx when we
     -- have to
 
@@ -49,14 +48,17 @@ local function getRequest()
 end
 
 local function getResponse()
-  local response = require 'server.response'
+  local response = setmetatable({
+    status = 404,
+    headers = {},
 
-  response.send = function(body)
-    ngx.say(body)
-    ngx.flush(true)
-  end
+    ["end"] = function() end,
 
-  response = setmetatable(response, {
+    send = function(body)
+      ngx.say(body)
+      ngx.flush(true)
+    end
+  },{
     __index = function(self, key)
       if key == "status" then
         return ngx.status
