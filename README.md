@@ -9,12 +9,12 @@ Require it in your config:
 
 ```lua
 local config = {
-  server = require 'lusty-nginx'.server,
+  server = require "lusty-nginx.server",
   --...
   
   log = {
     --...
-    { require 'lusty-nginx'.log }
+    { ["lusty-nginx.log"] = {} }
   }
   -...
 }
