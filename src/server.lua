@@ -1,6 +1,5 @@
-local server = { }
-
-local index = {
+--table created to replace nested if in __index. Contains lookup of values to return for request
+local requestIndex = {
   headers = function(request)
     return ngx.req.get_headers()
   end,
@@ -38,28 +37,44 @@ local index = {
       request.params = ngx.req.get_post_args()
     end
     return request.params
+  end,
+
+  url = function(request)
+    return ngx.var.uri
+  end
+}
+
+--table created to replace nested if in __index. Contains lookup of values to return for response
+local responseIndex = {
+  status = function(response)
+    return ngx.status
+  end,
+
+  headers = function(response)
+    return ngx.header
+  end
+}
+
+--same as above but for newIndex
+local responseNewIndex = {
+  status = function(response, value)
+    ngx.status = value
   end
 }
 
 local function getRequest()
-  local request = setmetatable({
-    url = ngx.var.uri
-  },{
+  return setmetatable({},{
     -- lazy-load all of the ngx data requests so we only call out to ngx when we
     -- have to
     __index = function(self, key)
-      return index[key] and index[key](self) or rawget(self, key)
+      local value = requestIndex[key]
+      return value and value(self) or rawget(self, key)
     end
   })
-
-  return request
 end
 
 local function getResponse()
-  local response = setmetatable({
-    status = 404,
-    headers = {},
-
+  return setmetatable({
     ["end"] = function() end,
 
     send = function(body)
@@ -68,28 +83,18 @@ local function getResponse()
     end
   },{
     __index = function(self, key)
-      if key == "status" then
-        return ngx.status
-      else
-        return rawget(self, key)
-      end
+      local value = responseIndex[key]
+      return value and value(self) or rawget(self, key)
     end,
 
     __newindex = function(self, key, value)
-      if key == "status" then
-        ngx.status = value
-      elseif key == "body" then
-        rawset(self, key, value)
-      end
+      local value = responseNewIndex[key]
+      return value and value(self, value) or rawset(self, key, value)
     end
   })
-
-  response.headers = ngx.header
-
-  return response
 end
 
-server.getRequest = getRequest
-server.getResponse = getResponse
-
-return server
+return {
+  getRequest = getRequest
+  getResponse = getResponse
+}
