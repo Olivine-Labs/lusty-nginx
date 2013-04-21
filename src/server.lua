@@ -1,46 +1,54 @@
 local server = { }
 
+local index = {
+  headers = function(request)
+    return ngx.req.get_headers()
+  end,
+
+  body = function(request)
+    if not request.body_was_read then
+      request.body_was_read = true
+      ngx.req.read_body()
+      request.body = ngx.req.get_body_data()
+    end
+    return request.body
+  end
+
+  file = function(request)
+    if not request.body_was_read then
+      request.body_was_read = true
+      ngx.req.read_body()
+      local file = ngx.req.get_body_file()
+      request.file = file
+    end
+    return request.file
+  end,
+
+  query = function(request)
+    return ngx.req.get_uri_args()
+  end,
+
+  method = function(request)
+    return ngx.req.get_method()
+  end,
+
+  params = function(request)
+    if not request.post_was_read then
+      request.post_was_read = true
+      request.params = ngx.req.get_post_args()
+    end
+    return request.params
+  end
+}
+
 local function getRequest()
   local request = setmetatable({
     url = ngx.var.uri
   },{
     -- lazy-load all of the ngx data requests so we only call out to ngx when we
     -- have to
-
     __index = function(self, key)
-      if key == "headers" then
-        headers = ngx.req.get_headers()
-        self.headers = headers
-        return headers
-      elseif key == "body" then
-        if not self.body_was_read then
-          self.body_was_read = true
-          ngx.req.read_body()
-        end
-        body = ngx.req.get_body_data()
-        self.body = body
-        return body
-      elseif key == "file" then
-        if not self.body_was_read then
-          self.body_was_read = true
-          ngx.req.read_body()
-        end
-        file = ngx.req.get_body_file()
-        self.file = file
-        return file
-      elseif key == "query" then
-        query = ngx.req.get_uri_args()
-        self.query = query
-        return query
-      elseif key == "method" then
-        method = ngx.req.get_method()
-        self.method = method
-        return method
-      elseif key == "params" then
-        params = ngx.req.get_post_args()
-        self.params = params
-        return params
-      end
+      return index[key] and index[key](self) or rawget(self, key)
     end
   })
 
