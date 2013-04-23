@@ -97,7 +97,7 @@ return function(lusty)
   end
 
   return setmetatable({
-    request = function(request, response)
+    request = function(self, request, response)
       return lusty:request(request or getRequest(), response or getResponse())
     end
   },
