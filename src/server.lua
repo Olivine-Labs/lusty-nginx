@@ -13,7 +13,7 @@ return function(lusty)
         request.body = ngx.req.get_body_data()
       end
       return request.body
-    end
+    end,
 
     file = function(request)
       if not request.body_was_read then
