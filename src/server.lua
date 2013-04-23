@@ -7,22 +7,22 @@ return function(lusty)
     end,
 
     body = function(request)
-      if not request.body_was_read then
+      if not rawget(request, 'body_was_read') then
         request.body_was_read = true
         ngx.req.read_body()
         request.body = ngx.req.get_body_data()
       end
-      return request.body
+      return rawget(request, 'body')
     end,
 
     file = function(request)
-      if not request.body_was_read then
+      if not rawget(request, 'body_was_read') then
         request.body_was_read = true
         ngx.req.read_body()
         local file = ngx.req.get_body_file()
         request.file = file
       end
-      return request.file
+      return rawget(request 'file')
     end,
 
     query = function(request)
@@ -38,7 +38,7 @@ return function(lusty)
         request.post_was_read = true
         request.params = ngx.req.get_post_args()
       end
-      return request.params
+      return rawget(request, 'params')
     end,
 
     url = function(request)
