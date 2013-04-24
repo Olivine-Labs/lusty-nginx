@@ -90,8 +90,8 @@ return function(lusty)
       end,
 
       __newindex = function(self, key, value)
-        local value = responseNewIndex[key]
-        return value and value(self, value) or rawset(self, key, value)
+        local val = responseNewIndex[key]
+        return val and val(self, value) or rawset(self, key, value)
       end
     })
   end
