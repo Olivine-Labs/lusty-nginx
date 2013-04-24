@@ -1,5 +1,5 @@
-local request = require 'request'
-local response = require 'response'
+local request = require 'lusty-nginx.request'
+local response = require 'lusty-nginx.response'
 
 --returns a request table for this server
 --uses metatables to memoize calls out to nginx
