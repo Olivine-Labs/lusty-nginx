@@ -18,7 +18,9 @@ dependencies = {
 build = {
   type = "builtin",
    modules = {
-    ["lusty-nginx.server"] = "src/server.lua",
+    ["lusty-nginx.init"] = "src/init.lua",
+    ["lusty-nginx.request"] = "src/request.lua",
+    ["lusty-nginx.response"] = "src/response.lua",
     ["lusty-nginx.log"] = "src/log.lua"
   }
 }
