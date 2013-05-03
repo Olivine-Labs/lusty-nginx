@@ -43,5 +43,9 @@ return {
       return ngx.var.uri
     end
   },
-  newindex = {}
+  newindex = {
+    method = function(request, value)
+      ngx.req.set_method(ngx['HTTP_'..value])
+    end
+  }
 }
