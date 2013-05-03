@@ -15,7 +15,12 @@ local function getRequest()
     end,
 
     __newindex = function(self, key, value)
-      memo[key] = value
+      local func = request.newindex[key]
+      if func then
+        func(memo, value)
+      else
+        memo[key] = value
+      end
     end
   })
 end
@@ -33,7 +38,11 @@ local function getResponse()
 
     __newindex = function(self, key, value)
       local func = response.newindex[key]
-      return func and func(memo, value) or rawset(memo, key, value)
+      if func then
+        func(memo, value)
+      else
+        memo[key] = value
+      end
     end
   })
 end
