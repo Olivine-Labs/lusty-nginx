@@ -28,7 +28,7 @@ return {
     end,
 
     method = function(request)
-      return ngx.req.get_method()
+      return request.method or ngx.req.get_method()
     end,
 
     params = function(request)
@@ -41,11 +41,16 @@ return {
 
     url = function(request)
       return ngx.var.uri
+    end,
+
+    sub = function(request)
+      return ngx.location.capture
     end
   },
   newindex = {
     method = function(request, value)
-      ngx.req.set_method(ngx['HTTP_'..value])
+      --ngx.req.set_method(ngx['HTTP_'..value])
+      request.method = value
     end
   }
 }
