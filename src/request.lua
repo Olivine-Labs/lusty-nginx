@@ -40,7 +40,7 @@ return {
     end,
 
     url = function(request)
-      return ngx.var.uri
+      return request.url or ngx.var.uri
     end,
 
     sub = function(request)
@@ -51,6 +51,9 @@ return {
     method = function(request, value)
       --ngx.req.set_method(ngx['HTTP_'..value])
       request.method = value
+    end,
+    url = function(request, value)
+      request.url = value
     end
   }
 }
