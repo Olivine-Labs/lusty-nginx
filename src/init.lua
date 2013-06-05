@@ -51,7 +51,19 @@ return function(lusty)
 
   local server = {
     request = function(self, request, response)
-      return lusty:request(request or getRequest(), response or getResponse())
+
+      local context = setmetatable({
+        suffix    = {},
+        request   = request or getRequest(),
+        response  = response or getResponse(),
+        input     = {},
+        output    = {}
+      }, lusty.context.__meta)
+
+      --split url at /
+      string.gsub(context.request.url, "([^/]+)", function(c) context.suffix[#context.suffix+1] = c end)
+
+      return lusty:request(context)
     end
   }
 
