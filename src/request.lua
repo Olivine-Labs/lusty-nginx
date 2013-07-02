@@ -1,7 +1,7 @@
 return {
   index = {
     headers = function(request)
-      return ngx.req.get_headers()
+      return ngx.header
     end,
 
     body = function(request)
