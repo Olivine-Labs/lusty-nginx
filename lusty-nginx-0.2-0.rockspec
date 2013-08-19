@@ -1,8 +1,8 @@
 package = "lusty-nginx"
-version = "0.1-1"
+version = "0.2-0"
 source = {
-  url = "https://github.com/Olivine-Labs/lusty-nginx/archive/v0.1.tar.gz",
-  dir = "lusty-nginx-0.1"
+  url = "https://github.com/Olivine-Labs/lusty-nginx/archive/v0.2.tar.gz",
+  dir = "lusty-nginx-0.2"
 }
 description = {
   summary = "Nginx plugin for lusty.",
