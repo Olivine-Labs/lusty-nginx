@@ -7,6 +7,12 @@ return {
     send = function(response)
       return function(body)
         ngx.say(body)
+      end
+    end,
+
+    flush = function(response)
+      return function(body)
+        ngx.say(body)
         ngx.flush(true)
       end
     end,
@@ -19,6 +25,7 @@ return {
       return ngx.header
     end
   },
+
   newindex = {
     --same as above but for newIndex
     status = function(response, value)
@@ -26,5 +33,4 @@ return {
     end
   }
 }
-
 
