@@ -1,7 +1,10 @@
 return {
   index = {
     headers = function(request)
-      return ngx.header
+      if not request.headers then
+        request.headers = ngx.req.get_headers()
+      end
+      return request.headers
     end,
 
     body = function(request)
