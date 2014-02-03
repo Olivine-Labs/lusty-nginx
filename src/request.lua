@@ -42,13 +42,33 @@ return {
       return request.params
     end,
 
-    url = function(request)
+    uri = function(request)
       return request.url or ngx.var.uri
+    end,
+
+    host = function(request)
+      return request.host or ngx.var.host
+    end,
+
+    port = function(request)
+      return request.port or ngx.var.server_port
+    end,
+
+    scheme = function(request)
+      return request.scheme or ngx.var.scheme
+    end,
+
+    url = function(request)
+      return request.url or ngx.var.scheme..'://'..ngx.var.host..(ngx.var.server_port == '80' and '' or ':'..ngx.var.server_port)..ngx.var.uri
+    end,
+
+    queryString = function(request)
+      return request.queryString or ngx.var.query_string
     end,
 
     sub = function(request)
       return ngx.location.capture
-    end
+    end,
   },
   newindex = {
     method = function(request, value)

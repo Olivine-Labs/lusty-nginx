@@ -61,7 +61,7 @@ return function(lusty)
       }, lusty.context.__meta)
 
       --split url at /
-      string.gsub(context.request.url, "([^/]+)", function(c) context.suffix[#context.suffix+1] = c end)
+      string.gsub(context.request.uri, "([^/]+)", function(c) context.suffix[#context.suffix+1] = c end)
 
       return lusty:request(context)
     end
