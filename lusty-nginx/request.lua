@@ -43,7 +43,7 @@ return {
     end,
 
     uri = function(request)
-      return request.url or ngx.var.uri
+      return request.url or ngx and ngx.var.uri or ''
     end,
 
     host = function(request)
